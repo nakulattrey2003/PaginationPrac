@@ -5,13 +5,34 @@ export default function App() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
 
-  const handlePrev = () => {
-    if (page > 1) {
-      setPage();
-    }
+  const handlePrevClick = () => {
+    setPage(page - 1);
   };
 
-  const handleNext = () => {};
+  const handlePageClick = (e) => {
+    setPage(e);
+  };
+
+  const handleNextClick = () => {
+    setPage(page + 1);
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const totalPages = Math.ceil(products.length / 9);
+    for (let i = 1; i <= totalPages; i++) {
+      pageNumbers.push(
+        <span
+          key={i}
+          className={page === i ? "activeButton" : ""}
+          onClick={() => handlePageClick(i)}
+        >
+          {i}
+        </span>
+      );
+    }
+    return pageNumbers;
+  };
 
   const fetchProducts = async () => {
     const response = await fetch("https://dummyjson.com/products");
@@ -34,7 +55,7 @@ export default function App() {
       </div>
       <div className="products">
         {products.length > 0 &&
-          products.slice(0, page * 9).map((item) => {
+          products.slice(page * 10 - 10, page * 9 + page - 1).map((item) => {
             return (
               <div className="products_single">
                 <img src={item.thumbnail} alt={item.title} />
@@ -44,8 +65,9 @@ export default function App() {
           })}
       </div>
       <div className="product_button">
-        <button onclick={handlePrev}>Prev</button>
-        <button onclick={handleNext}>Next</button>
+        <span onClick={handlePrevClick}>⬅️</span>
+        {renderPageNumbers()}
+        <span onClick={handleNextClick}>➡️</span>
       </div>
     </div>
   );
