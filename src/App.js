@@ -6,7 +6,7 @@ export default function App() {
   const [page, setPage] = useState(1);
 
   const handlePrevClick = () => {
-    setPage(page - 1);
+    if (page > 1) setPage(page - 1);
   };
 
   const handlePageClick = (e) => {
@@ -14,7 +14,7 @@ export default function App() {
   };
 
   const handleNextClick = () => {
-    setPage(page + 1);
+    if (page <= products.length/10) setPage(page + 1);
   };
 
   const renderPageNumbers = () => {
@@ -55,7 +55,7 @@ export default function App() {
       </div>
       <div className="products">
         {products.length > 0 &&
-          products.slice(page * 10 - 10, page * 9 + page - 1).map((item) => {
+          products.slice((page - 1) * 9, page * 9).map((item) => {
             return (
               <div className="products_single">
                 <img src={item.thumbnail} alt={item.title} />
